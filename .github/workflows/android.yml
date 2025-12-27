@@ -3,13 +3,24 @@ name: Android CI
 on:
   push:
     branches: [ "master", "main" ]
+  workflow_dispatch: # ይህ አዝራር በፈለግክ ጊዜ በእጅህ Build እንድታደርግ ይረዳሃል
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Free Disk Space (የሰርቨር ቦታ ማጽጃ)
+      run: |
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /usr/local/lib/android
+        sudo rm -rf /opt/ghc
+        sudo rm -rf "/usr/local/share/boost"
+        sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+        docker image prune -a -f
 
     - name: set up JDK 17
       uses: actions/setup-java@v4
@@ -25,6 +36,12 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
-    - name: Build Debug APK
-      run: ./gradlew assembleDebug --no-daemon
+    - name: Build Debug APK (አፑን መገንባት)
+      run: ./gradlew assembleDebug --no-daemon --stacktrace
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: cipher-attack-debug-apk
+        path: TMessagesProj/build/outputs/apk/debug/*.apk
 
