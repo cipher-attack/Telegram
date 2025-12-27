@@ -35,7 +35,7 @@ jobs:
     - name: Grant execute permission
       run: chmod +x gradlew
 
-    - name: Build with Gradle
+    - name: Build TMessagesProj
       run: ./gradlew :TMessagesProj:assembleDebug --stacktrace --no-daemon
 
     - name: Upload APK
