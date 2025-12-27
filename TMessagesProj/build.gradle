@@ -210,7 +210,7 @@ android {
         }
     }
 
-    namespace 'org.telegram.messenger'
+    namespace 'com.cipher.attack.messenger'
 }
 
 
